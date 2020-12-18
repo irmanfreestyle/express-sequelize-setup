@@ -1,0 +1,62 @@
+module.exports = (sequelize, DataType) => {
+    const User = sequelize.define('user', {
+        userId: {
+            type: DataType.STRING(255),
+            allowNull: false,
+            primaryKey: true
+        },
+        fullName: DataType.STRING(50),
+        email: DataType.STRING(100),
+        password: DataType.STRING(255),
+        photo: DataType.STRING(255),
+        createdAt: DataType.BIGINT(11),
+        updatedAt: DataType.BIGINT(11),
+    }, {
+        timestamps: false,
+        freezeTableName: true,
+    });
+
+    User.associate = function(models) {
+        User.hasMany(models.class_room, {
+            foreignKey: 'createdBy',
+            sourceKey: 'userId',
+            onDelete: 'cascade',
+        });
+
+        User.hasMany(models.uploaded_task, {
+            foreignKey: 'uploadedBy',
+            sourceKey: 'userId',
+            onDelete: 'cascade',
+        });
+
+        User.hasMany(models.uploaded_task, {
+            foreignKey: 'markBy',
+            sourceKey: 'userId',
+            onDelete: 'cascade',
+        });
+
+        User.hasMany(models.class_room_member, {
+            foreignKey: 'userId',
+            onDelete: 'cascade',
+        });
+
+        User.hasMany(models.post, {
+            foreignKey: 'createdBy',
+            sourceKey: 'userId',
+            onDelete: 'cascade',
+        });
+
+        User.hasMany(models.task, {
+            foreignKey: 'createdBy',
+            sourceKey: 'userId',
+            onDelete: 'cascade',
+        });
+
+        User.hasMany(models.comment, {
+            foreignKey: 'userId',
+            onDelete: 'cascade',
+        });
+    }
+
+    return User;
+}
